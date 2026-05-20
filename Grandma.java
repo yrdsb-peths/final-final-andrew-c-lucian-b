@@ -8,10 +8,12 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Grandma extends Actor
 {
-    /**
-     * Act - do whatever the Grandma wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
+    public Grandma()
+    {
+        GreenfootImage level1 = new GreenfootImage("grandma.jpg");
+        level1.scale(150, 150);
+        setImage(level1);
+    }
     
     public void act()
     {
