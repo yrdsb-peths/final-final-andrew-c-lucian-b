@@ -6,5 +6,8 @@ public class MyWorld extends World {
         
         Grandma grandma = new Grandma();
         addObject(grandma, 300, 200);
+        
+        Fly fly = new Fly();
+        addObject(fly, 400, 300);
     }
 }
