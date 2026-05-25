@@ -17,6 +17,7 @@ public class Grandma extends Actor
     
     public void act()
     {
+        /**
         if(Greenfoot.isKeyDown("left")){
             setLocation(getX() - 3, getY());
         }
@@ -29,5 +30,6 @@ public class Grandma extends Actor
         else if(Greenfoot.isKeyDown("down")){
             setLocation(getX(), getY() + 3);
         }
+        */
     }
 }
