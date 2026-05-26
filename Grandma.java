@@ -10,30 +10,26 @@ public class Grandma extends Actor
 {
     GreenfootImage[] grandmaRight = new GreenfootImage[4];
     GreenfootImage[] grandmaLeft = new GreenfootImage[4];
-    
+
     String facing = "right";
-    
+
     SimpleTimer animationTimer = new SimpleTimer();
-    
     int imageIndex = 0;
-    
-    private int speed = 2; 
+
+    private int speed = 2;
 
     public Grandma()
     {
-        for(int i = 0; i < grandmaRight.length; i++)
+        for (int i = 0; i < grandmaRight.length; i++)
         {
             grandmaRight[i] = new GreenfootImage("grandma_walk/grandma_walk" + (i+1) + ".png");
             grandmaRight[i].scale(150, 150);
-        }
-        
-        for(int i = 0; i < grandmaLeft.length; i++)
-        {
+
             grandmaLeft[i] = new GreenfootImage("grandma_walk/grandma_walk" + (i+1) + ".png");
             grandmaLeft[i].mirrorHorizontally();
             grandmaLeft[i].scale(150, 150);
         }
-        
+
         setImage(grandmaRight[0]);
         animationTimer.mark();
     }
@@ -46,6 +42,8 @@ public class Grandma extends Actor
 
     private void chaseFly()
     {
+        if (getWorld().getObjects(Fly.class).isEmpty()) return;
+
         Fly fly = (Fly) getWorld().getObjects(Fly.class).get(0);
 
         int dx = fly.getX() - getX();
@@ -53,7 +51,6 @@ public class Grandma extends Actor
 
         if (Math.abs(dx) > Math.abs(dy))
         {
-            // horizontal movement is stronger
             if (dx > 0)
             {
                 setLocation(getX() + speed, getY());
@@ -67,36 +64,24 @@ public class Grandma extends Actor
         }
         else
         {
-            // vertical movement
             if (dy > 0)
-            {
                 setLocation(getX(), getY() + speed);
-            }
             else
-            {
                 setLocation(getX(), getY() - speed);
-            }
         }
     }
 
-    public void animateGrandma()
+    private void animateGrandma()
     {
-        if(animationTimer.millisElapsed() < 120)
-        {
-            return;
-        }
-        
+        if (animationTimer.millisElapsed() < 120) return;
+
         animationTimer.mark();
-        
-        if(facing.equals("right"))
-        {
+
+        if (facing.equals("right"))
             setImage(grandmaRight[imageIndex]);
-        }
         else
-        {
             setImage(grandmaLeft[imageIndex]);
-        }
-        
+
         imageIndex = (imageIndex + 1) % grandmaRight.length;
     }
 }
