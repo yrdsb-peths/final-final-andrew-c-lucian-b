@@ -1,11 +1,5 @@
-import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
-/**
- * Write a description of class Fly here.
- * 
- * @Lucian and Andrew
- * @May 20, 2026
- */
 public class Fly extends Actor
 {
     private int speed = 4;
@@ -26,25 +20,7 @@ public class Fly extends Actor
 
     public void act()
     {
-        checkCatch();
         moveFly();
-    }
-
-    private void checkCatch()
-    {
-        if (isTouching(Grandma.class))
-        {
-            Grandma g = (Grandma) getOneIntersectingObject(Grandma.class);
-            if (g == null) return;
-    
-            int cx = (getX() + g.getX()) / 2;
-            int cy = (getY() + g.getY()) / 2;
-    
-            getWorld().addObject(new FightCloud(), cx, cy);
-    
-            getWorld().removeObject(g);
-            getWorld().removeObject(this);
-        }
     }
 
     private void loadAnimations()
@@ -64,8 +40,6 @@ public class Fly extends Actor
 
     private void moveFly()
     {
-        boolean moving = false;
-
         int dx = 0;
         int dy = 0;
 
@@ -74,33 +48,13 @@ public class Fly extends Actor
         if (Greenfoot.isKeyDown("a")) { dx -= speed; facingRight = false; }
         if (Greenfoot.isKeyDown("d")) { dx += speed; facingRight = true; }
 
+        // 🚨 DO NOT MOVE FLY — move world instead
         if (dx != 0 || dy != 0)
         {
-            setLocation(getX() + dx, getY() + dy);
-            moving = true;
+            ((Level1)getWorld()).scrollWorld(dx, dy);
 
             if (dx != 0) animateHorizontal();
             else animateVertical();
-        }
-
-        if (!moving)
-        {
-            setImage(flyRight[0]);
-        }
-    }
-
-    private void animateVertical()
-    {
-        animationCounter++;
-
-        if (animationCounter % 5 == 0)
-        {
-            imageIndex = (imageIndex + 1) % flyVertical.length;
-
-            GreenfootImage img = new GreenfootImage(flyVertical[imageIndex]);
-            if (facingDown) img.rotate(180);
-
-            setImage(img);
         }
     }
 
@@ -113,9 +67,50 @@ public class Fly extends Actor
             imageIndex = (imageIndex + 1) % flyRight.length;
 
             GreenfootImage img = new GreenfootImage(flyRight[imageIndex]);
-            if (!facingRight) img.mirrorHorizontally();
+
+            if (!facingRight)
+            {
+                img.mirrorHorizontally();
+            }
 
             setImage(img);
         }
+    }
+
+    private void animateVertical()
+    {
+        animationCounter++;
+
+        if (animationCounter % 5 == 0)
+        {
+            imageIndex = (imageIndex + 1) % flyVertical.length;
+
+            GreenfootImage img = new GreenfootImage(flyVertical[imageIndex]);
+
+            if (facingDown)
+            {
+                img.rotate(180);
+            }
+
+            setImage(img);
+        }
+    }
+    public boolean willTouchWall(int dx, int dy)
+    {
+        for (Wall w : getWorld().getObjects(Wall.class))
+        {
+            int futureX = getX();
+            int futureY = getY();
+    
+            int wallFutureX = w.getX() - dx;
+            int wallFutureY = w.getY() - dy;
+    
+            if (Math.abs(futureX - wallFutureX) < w.getImage().getWidth()/2 &&
+                Math.abs(futureY - wallFutureY) < w.getImage().getHeight()/2)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
