@@ -6,15 +6,16 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @Lucian and Andrew
  * @May 20, 2026
  */
+
 public class Grandma extends Actor
 {
-    GreenfootImage[] grandmaRight = new GreenfootImage[4];
-    GreenfootImage[] grandmaLeft = new GreenfootImage[4];
+    private GreenfootImage[] grandmaRight = new GreenfootImage[4];
+    private GreenfootImage[] grandmaLeft = new GreenfootImage[4];
 
-    String facing = "right";
+    private String facing = "right";
 
-    SimpleTimer animationTimer = new SimpleTimer();
-    int imageIndex = 0;
+    private SimpleTimer animationTimer = new SimpleTimer();
+    private int imageIndex = 0;
 
     private int speed = 2;
     private int throwCooldown = 0;
@@ -23,10 +24,10 @@ public class Grandma extends Actor
     {
         for (int i = 0; i < grandmaRight.length; i++)
         {
-            grandmaRight[i] = new GreenfootImage("grandma_walk/grandma_walk" + (i+1) + ".png");
+            grandmaRight[i] = new GreenfootImage("grandma_walk/grandma_walk" + (i + 1) + ".png");
             grandmaRight[i].scale(150, 150);
 
-            grandmaLeft[i] = new GreenfootImage("grandma_walk/grandma_walk" + (i+1) + ".png");
+            grandmaLeft[i] = new GreenfootImage("grandma_walk/grandma_walk" + (i + 1) + ".png");
             grandmaLeft[i].mirrorHorizontally();
             grandmaLeft[i].scale(150, 150);
         }
@@ -38,15 +39,26 @@ public class Grandma extends Actor
     public void act()
     {
         chaseFly();
-        animateGrandma();
         throwShoe();
+        animateGrandma();
+        stayInBounds();
     }
 
     private void chaseFly()
     {
-        if (getWorld().getObjects(Fly.class).isEmpty()) return;
+        if (getWorld() == null)
+        {
+            return;
+        }
 
-        Fly fly = (Fly) getWorld().getObjects(Fly.class).get(0);
+        java.util.List<Fly> flies = getWorld().getObjects(Fly.class);
+
+        if (flies.isEmpty())
+        {
+            return;
+        }
+
+        Fly fly = flies.get(0);
 
         int dx = fly.getX() - getX();
         int dy = fly.getY() - getY();
@@ -67,9 +79,13 @@ public class Grandma extends Actor
         else
         {
             if (dy > 0)
+            {
                 setLocation(getX(), getY() + speed);
+            }
             else
+            {
                 setLocation(getX(), getY() - speed);
+            }
         }
     }
 
@@ -81,18 +97,32 @@ public class Grandma extends Actor
             return;
         }
 
-        if (getWorld().getObjects(Fly.class).isEmpty()) return;
+        if (getWorld() == null)
+        {
+            return;
+        }
 
-        Fly fly = getWorld().getObjects(Fly.class).get(0);
+        java.util.List<Fly> flies = getWorld().getObjects(Fly.class);
+
+        if (flies.isEmpty())
+        {
+            return;
+        }
+
+        Fly fly = flies.get(0);
 
         int dx = fly.getX() - getX();
         int dy = fly.getY() - getY();
 
         double length = Math.sqrt(dx * dx + dy * dy);
-        if (length == 0) return;
 
-        int dirX = (int)Math.round(dx / length);
-        int dirY = (int)Math.round(dy / length);
+        if (length == 0)
+        {
+            return;
+        }
+
+        int dirX = (int) Math.round(dx / length);
+        int dirY = (int) Math.round(dy / length);
 
         getWorld().addObject(new Shoe(dirX, dirY), getX(), getY());
 
@@ -101,15 +131,45 @@ public class Grandma extends Actor
 
     private void animateGrandma()
     {
-        if (animationTimer.millisElapsed() < 120) return;
+        if (animationTimer.millisElapsed() < 120)
+        {
+            return;
+        }
 
         animationTimer.mark();
 
         if (facing.equals("right"))
+        {
             setImage(grandmaRight[imageIndex]);
+        }
         else
+        {
             setImage(grandmaLeft[imageIndex]);
+        }
 
         imageIndex = (imageIndex + 1) % grandmaRight.length;
+    }
+
+    private void stayInBounds()
+    {
+        if (getX() < 0)
+        {
+            setLocation(0, getY());
+        }
+
+        if (getX() > getWorld().getWidth() - 1)
+        {
+            setLocation(getWorld().getWidth() - 1, getY());
+        }
+
+        if (getY() < 0)
+        {
+            setLocation(getX(), 0);
+        }
+
+        if (getY() > getWorld().getHeight() - 1)
+        {
+            setLocation(getX(), getWorld().getHeight() - 1);
+        }
     }
 }

@@ -1,5 +1,12 @@
 import greenfoot.*;
 
+/**
+ * Write a description of class Shoe here.
+ * 
+ * @Lucian and Andrew
+ * @May 28, 2026
+ */
+
 public class Shoe extends Actor
 {
     private double dx;
@@ -20,21 +27,17 @@ public class Shoe extends Actor
 
     public void act()
     {
-        setLocation(
-            (int)(getX() + dx),
-            (int)(getY() + dy)
-        );
+        setLocation((int)(getX() + dx), (int)(getY() + dy));
 
         updateRotation();
         checkHit();
-        checkRemove();
+        checkBounds();
     }
 
     private void updateRotation()
     {
         double angle = Math.toDegrees(Math.atan2(dy, dx));
-    
-        // FIX: align sprite (which faces down-right) properly
+
         setRotation((int)(angle + 45));
     }
 
@@ -42,18 +45,26 @@ public class Shoe extends Actor
     {
         if (isTouching(Fly.class))
         {
-            Fly f = (Fly) getOneIntersectingObject(Fly.class);
+            Actor f = getOneIntersectingObject(Fly.class);
+
             if (f != null)
             {
                 getWorld().removeObject(f);
             }
+
             getWorld().removeObject(this);
         }
     }
 
-    private void checkRemove()
+    private void checkBounds()
     {
-        if (isAtEdge())
+        if (getWorld() == null)
+        {
+            return;
+        }
+
+        if (getX() < 0 || getX() > getWorld().getWidth() ||
+            getY() < 0 || getY() > getWorld().getHeight())
         {
             getWorld().removeObject(this);
         }
