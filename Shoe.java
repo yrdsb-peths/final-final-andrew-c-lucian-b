@@ -1,4 +1,4 @@
-import greenfoot.*;
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
  * Write a description of class Shoe here.
@@ -6,7 +6,6 @@ import greenfoot.*;
  * @Lucian and Andrew
  * @May 28, 2026
  */
-
 public class Shoe extends Actor
 {
     private double dx;
@@ -17,7 +16,7 @@ public class Shoe extends Actor
         setImage("shoe.png");
         getImage().scale(40, 40);
 
-        double speed = 6;
+        double speed = 4;
 
         dx = dirX * speed;
         dy = dirY * speed;
@@ -45,11 +44,11 @@ public class Shoe extends Actor
     {
         if (isTouching(Fly.class))
         {
-            Actor f = getOneIntersectingObject(Fly.class);
+            Actor fly = getOneIntersectingObject(Fly.class);
 
-            if (f != null)
+            if (fly != null)
             {
-                getWorld().removeObject(f);
+                getWorld().removeObject(fly);
             }
 
             getWorld().removeObject(this);
@@ -63,8 +62,13 @@ public class Shoe extends Actor
             return;
         }
 
-        if (getX() < 0 || getX() > getWorld().getWidth() ||
-            getY() < 0 || getY() > getWorld().getHeight())
+        if (getX() < 0 || getX() > getWorld().getWidth())
+        {
+            getWorld().removeObject(this);
+            return;
+        }
+
+        if (getY() < 0 || getY() > getWorld().getHeight())
         {
             getWorld().removeObject(this);
         }

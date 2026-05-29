@@ -6,7 +6,6 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @Lucian and Andrew
  * @May 20, 2026
  */
-
 public class Fly extends Actor
 {
     private int speed = 4;
@@ -28,7 +27,26 @@ public class Fly extends Actor
     public void act()
     {
         moveFly();
+
+        if (getWorld() == null)
+        {
+            return;
+        }
+
         checkCatch();
+
+        if (getWorld() == null)
+        {
+            return;
+        }
+
+        collectCake();
+
+        if (getWorld() == null)
+        {
+            return;
+        }
+
         stayInBounds();
     }
 
@@ -36,12 +54,46 @@ public class Fly extends Actor
     {
         if (isTouching(Grandma.class))
         {
-            Actor g = getOneIntersectingObject(Grandma.class);
+            World world = getWorld();
 
-            if (g != null)
+            if (world == null)
             {
-                getWorld().removeObject(g);
-                getWorld().removeObject(this);
+                return;
+            }
+
+            Actor grandma = getOneIntersectingObject(Grandma.class);
+
+            if (grandma != null)
+            {
+                world.removeObject(grandma);
+            }
+
+            if (getWorld() != null)
+            {
+                world.removeObject(this);
+            }
+        }
+    }
+
+    private void collectCake()
+    {
+        if (isTouching(Cake.class))
+        {
+            World world = getWorld();
+
+            if (world == null)
+            {
+                return;
+            }
+
+            Actor cake = getOneIntersectingObject(Cake.class);
+
+            if (cake != null)
+            {
+                world.removeObject(cake);
+
+                MyWorld myWorld = (MyWorld) world;
+                myWorld.cakeCollected();
             }
         }
     }
