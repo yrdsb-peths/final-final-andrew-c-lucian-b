@@ -23,9 +23,13 @@ public class Fly extends Actor
     private boolean facingRight = true;
     private boolean facingDown = true;
 
+    private GreenfootImage currentFrame;
+
     public Fly()
     {
         loadAnimations();
+        currentFrame = flyRight[0];
+        setImage(currentFrame);
     }
 
     public void act()
@@ -57,6 +61,7 @@ public class Fly extends Actor
         }
 
         stayInBounds();
+
         drawHealthBar();
     }
 
@@ -87,7 +92,7 @@ public class Fly extends Actor
 
     private void drawHealthBar()
     {
-        GreenfootImage img = new GreenfootImage(flyRight[0]);
+        GreenfootImage img = new GreenfootImage(currentFrame);
 
         int barWidth = 40;
         int barHeight = 6;
@@ -109,11 +114,6 @@ public class Fly extends Actor
             healthWidth,
             barHeight
         );
-
-        if (facingRight == false)
-        {
-            img.mirrorHorizontally();
-        }
 
         setImage(img);
     }
@@ -237,8 +237,6 @@ public class Fly extends Actor
             flyRight[i].scale(flyRight[i].getWidth() / 5, flyRight[i].getHeight() / 5);
             flyVertical[i].scale(flyVertical[i].getWidth() / 5, flyVertical[i].getHeight() / 5);
         }
-
-        setImage(flyRight[0]);
     }
 
     private void animateVertical()
@@ -256,7 +254,7 @@ public class Fly extends Actor
                 img.rotate(180);
             }
 
-            setImage(img);
+            currentFrame = img;
         }
     }
 
@@ -275,7 +273,7 @@ public class Fly extends Actor
                 img.mirrorHorizontally();
             }
 
-            setImage(img);
+            currentFrame = img;
         }
     }
 }
