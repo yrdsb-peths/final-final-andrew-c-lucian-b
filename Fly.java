@@ -10,6 +10,10 @@ public class Fly extends Actor
 {
     private int speed = 4;
 
+    private int health = 100;
+    private int maxHealth = 100;
+    private int invulnerabilityTimer = 0;
+
     private GreenfootImage[] flyRight;
     private GreenfootImage[] flyVertical;
 
@@ -26,6 +30,11 @@ public class Fly extends Actor
 
     public void act()
     {
+        if (invulnerabilityTimer > 0)
+        {
+            invulnerabilityTimer--;
+        }
+
         moveFly();
 
         if (getWorld() == null)
@@ -48,30 +57,72 @@ public class Fly extends Actor
         }
 
         stayInBounds();
+        drawHealthBar();
+    }
+
+    public void takeDamage(int damage)
+    {
+        if (invulnerabilityTimer > 0)
+        {
+            return;
+        }
+
+        health = health - damage;
+
+        if (health < 0)
+        {
+            health = 0;
+        }
+
+        invulnerabilityTimer = 120;
+
+        if (health <= 0)
+        {
+            if (getWorld() != null)
+            {
+                getWorld().removeObject(this);
+            }
+        }
+    }
+
+    private void drawHealthBar()
+    {
+        GreenfootImage img = new GreenfootImage(flyRight[0]);
+
+        int barWidth = 40;
+        int barHeight = 6;
+
+        int healthWidth = (health * barWidth) / maxHealth;
+
+        img.setColor(Color.RED);
+        img.fillRect(
+            (img.getWidth() - barWidth) / 2,
+            0,
+            barWidth,
+            barHeight
+        );
+
+        img.setColor(Color.GREEN);
+        img.fillRect(
+            (img.getWidth() - barWidth) / 2,
+            0,
+            healthWidth,
+            barHeight
+        );
+
+        if (facingRight == false)
+        {
+            img.mirrorHorizontally();
+        }
+
+        setImage(img);
     }
 
     private void checkCatch()
     {
         if (isTouching(Grandma.class))
         {
-            World world = getWorld();
-
-            if (world == null)
-            {
-                return;
-            }
-
-            Actor grandma = getOneIntersectingObject(Grandma.class);
-
-            if (grandma != null)
-            {
-                world.removeObject(grandma);
-            }
-
-            if (getWorld() != null)
-            {
-                world.removeObject(this);
-            }
+            takeDamage(50);
         }
     }
 
@@ -100,38 +151,46 @@ public class Fly extends Actor
 
     private void moveFly()
     {
-        int dx = 0;
-        int dy = 0;
+        double dx = 0;
+        double dy = 0;
 
         if (Greenfoot.isKeyDown("w"))
         {
-            dy = dy - speed;
+            dy = dy - 1;
             facingDown = false;
         }
 
         if (Greenfoot.isKeyDown("s"))
         {
-            dy = dy + speed;
+            dy = dy + 1;
             facingDown = true;
         }
 
         if (Greenfoot.isKeyDown("a"))
         {
-            dx = dx - speed;
+            dx = dx - 1;
             facingRight = false;
         }
 
         if (Greenfoot.isKeyDown("d"))
         {
-            dx = dx + speed;
+            dx = dx + 1;
             facingRight = true;
         }
 
         if (dx != 0 || dy != 0)
         {
-            setLocation(getX() + dx, getY() + dy);
+            double length = Math.sqrt(dx * dx + dy * dy);
 
-            if (dx != 0)
+            dx = (dx / length) * speed;
+            dy = (dy / length) * speed;
+
+            setLocation(
+                (int)(getX() + dx),
+                (int)(getY() + dy)
+            );
+
+            if (Math.abs(dx) > Math.abs(dy))
             {
                 animateHorizontal();
             }
@@ -178,6 +237,8 @@ public class Fly extends Actor
             flyRight[i].scale(flyRight[i].getWidth() / 5, flyRight[i].getHeight() / 5);
             flyVertical[i].scale(flyVertical[i].getWidth() / 5, flyVertical[i].getHeight() / 5);
         }
+
+        setImage(flyRight[0]);
     }
 
     private void animateVertical()

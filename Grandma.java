@@ -121,8 +121,8 @@ public class Grandma extends Actor
 
         Fly fly = flies.get(0);
 
-        int dx = fly.getX() - getX();
-        int dy = fly.getY() - getY();
+        double dx = fly.getX() - getX();
+        double dy = fly.getY() - getY();
 
         double length = Math.sqrt(dx * dx + dy * dy);
 
@@ -131,8 +131,8 @@ public class Grandma extends Actor
             return;
         }
 
-        int dirX = (int) Math.round(dx / length);
-        int dirY = (int) Math.round(dy / length);
+        double dirX = dx / length;
+        double dirY = dy / length;
 
         getWorld().addObject(new Shoe(dirX, dirY), getX(), getY());
 

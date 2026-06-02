@@ -11,7 +11,9 @@ public class Shoe extends Actor
     private double dx;
     private double dy;
 
-    public Shoe(int dirX, int dirY)
+    private int damage = 20;
+
+    public Shoe(double dirX, double dirY)
     {
         setImage("shoe.png");
         getImage().scale(40, 40);
@@ -26,6 +28,11 @@ public class Shoe extends Actor
 
     public void act()
     {
+        if (getWorld() == null)
+        {
+            return;
+        }
+
         setLocation((int)(getX() + dx), (int)(getY() + dy));
 
         updateRotation();
@@ -36,22 +43,29 @@ public class Shoe extends Actor
     private void updateRotation()
     {
         double angle = Math.toDegrees(Math.atan2(dy, dx));
-
         setRotation((int)(angle + 45));
     }
 
     private void checkHit()
     {
+        if (getWorld() == null)
+        {
+            return;
+        }
+
         if (isTouching(Fly.class))
         {
-            Actor fly = getOneIntersectingObject(Fly.class);
+            Fly fly = (Fly)getOneIntersectingObject(Fly.class);
 
             if (fly != null)
             {
-                getWorld().removeObject(fly);
+                fly.takeDamage(damage);
             }
 
-            getWorld().removeObject(this);
+            if (getWorld() != null)
+            {
+                getWorld().removeObject(this);
+            }
         }
     }
 
@@ -62,13 +76,8 @@ public class Shoe extends Actor
             return;
         }
 
-        if (getX() < 0 || getX() > getWorld().getWidth())
-        {
-            getWorld().removeObject(this);
-            return;
-        }
-
-        if (getY() < 0 || getY() > getWorld().getHeight())
+        if (getX() < 0 || getX() > getWorld().getWidth() ||
+            getY() < 0 || getY() > getWorld().getHeight())
         {
             getWorld().removeObject(this);
         }
