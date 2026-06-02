@@ -8,7 +8,7 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Fly extends Actor
 {
-    private int speed = 4;
+    private int speed = 5;
 
     private int health = 100;
     private int maxHealth = 100;
@@ -100,20 +100,10 @@ public class Fly extends Actor
         int healthWidth = (health * barWidth) / maxHealth;
 
         img.setColor(Color.RED);
-        img.fillRect(
-            (img.getWidth() - barWidth) / 2,
-            0,
-            barWidth,
-            barHeight
-        );
+        img.fillRect((img.getWidth() - barWidth) / 2, 0, barWidth, barHeight);
 
         img.setColor(Color.GREEN);
-        img.fillRect(
-            (img.getWidth() - barWidth) / 2,
-            0,
-            healthWidth,
-            barHeight
-        );
+        img.fillRect((img.getWidth() - barWidth) / 2, 0, healthWidth, barHeight);
 
         setImage(img);
     }
@@ -180,15 +170,12 @@ public class Fly extends Actor
 
         if (dx != 0 || dy != 0)
         {
-            double length = Math.sqrt(dx * dx + dy * dy);
+            double len = Math.sqrt(dx * dx + dy * dy);
 
-            dx = (dx / length) * speed;
-            dy = (dy / length) * speed;
+            dx = (dx / len) * speed;
+            dy = (dy / len) * speed;
 
-            setLocation(
-                (int)(getX() + dx),
-                (int)(getY() + dy)
-            );
+            setLocation((int)(getX() + dx), (int)(getY() + dy));
 
             if (Math.abs(dx) > Math.abs(dy))
             {
@@ -249,7 +236,7 @@ public class Fly extends Actor
 
             GreenfootImage img = new GreenfootImage(flyVertical[imageIndex]);
 
-            if (facingDown == true)
+            if (facingDown)
             {
                 img.rotate(180);
             }
@@ -268,7 +255,7 @@ public class Fly extends Actor
 
             GreenfootImage img = new GreenfootImage(flyRight[imageIndex]);
 
-            if (facingRight == false)
+            if (!facingRight)
             {
                 img.mirrorHorizontally();
             }

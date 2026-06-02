@@ -20,6 +20,8 @@ public class Grandma extends Actor
     private int throwCooldown = 0;
     private int throwDelay = 120;
 
+    private int level = 1;
+
     public Grandma()
     {
         for (int i = 0; i < grandmaRight.length; i++)
@@ -44,23 +46,25 @@ public class Grandma extends Actor
         }
 
         chaseFly();
-        throwShoe();
+        throwProjectile();
         animateGrandma();
         stayInBounds();
     }
 
     public void setLevel(int level)
     {
+        this.level = level;
+
         if (level == 2)
         {
-            speed = 2;
-            throwDelay = 80;
+            speed = 1;
+            throwDelay = 100;
         }
 
         if (level == 3)
         {
-            speed = 3;
-            throwDelay = 50;
+            speed = 2;
+            throwDelay = 70;
         }
     }
 
@@ -104,38 +108,50 @@ public class Grandma extends Actor
         }
     }
 
-    private void throwShoe()
+    private void throwProjectile()
     {
         if (throwCooldown > 0)
         {
             throwCooldown--;
             return;
         }
-
+    
         java.util.List<Fly> flies = getWorld().getObjects(Fly.class);
-
+    
         if (flies.isEmpty())
         {
             return;
         }
-
+    
         Fly fly = flies.get(0);
-
+    
         double dx = fly.getX() - getX();
         double dy = fly.getY() - getY();
-
+    
         double length = Math.sqrt(dx * dx + dy * dy);
-
+    
         if (length == 0)
         {
             return;
         }
-
+    
         double dirX = dx / length;
         double dirY = dy / length;
-
-        getWorld().addObject(new Shoe(dirX, dirY), getX(), getY());
-
+    
+        if (level == 1)
+        {
+            getWorld().addObject(new Shoe(dirX, dirY), getX(), getY());
+        }
+        else if (level == 2)
+        {
+            getWorld().addObject(new Drug(dirX, dirY), getX(), getY());
+        }
+        else if (level == 3)
+        {
+            // still drug for now, just faster throwing handled elsewhere
+            getWorld().addObject(new Drug(dirX, dirY), getX(), getY());
+        }
+    
         throwCooldown = throwDelay;
     }
 
