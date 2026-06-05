@@ -10,7 +10,7 @@ public class MyWorld extends World
 {
     private boolean gameOver = false;
 
-    private int cakesEaten = 0;
+    private int collected = 0;
     private int level = 1;
 
     private Grandma grandma;
@@ -26,7 +26,7 @@ public class MyWorld extends World
         Fly fly = new Fly();
         addObject(fly, 400, 300);
 
-        spawnCake();
+        spawnItem();
         updateHUD();
     }
 
@@ -38,38 +38,46 @@ public class MyWorld extends World
         }
     }
 
-    public void cakeCollected()
+    public void itemCollected()
     {
-        cakesEaten++;
+        collected++;
 
-        if (cakesEaten >= 5 && level == 1)
+        if (collected >= 5 && level == 1)
         {
             level = 2;
             grandma.setLevel(2);
         }
 
-        if (cakesEaten >= 10 && level == 2)
+        if (collected >= 10 && level == 2)
         {
             level = 3;
             grandma.setLevel(3);
         }
 
-        spawnCake();
+        spawnItem();
         updateHUD();
     }
 
-    private void spawnCake()
+    private void spawnItem()
     {
         int x = Greenfoot.getRandomNumber(getWidth() - 100) + 50;
         int y = Greenfoot.getRandomNumber(getHeight() - 100) + 50;
 
-        Cake cake = new Cake();
-        addObject(cake, x, y);
+        int chance = Greenfoot.getRandomNumber(100);
+
+        if (chance < 20)
+        {
+            addObject(new Heart(), x, y);
+        }
+        else
+        {
+            addObject(new Cake(), x, y);
+        }
     }
 
     private void updateHUD()
     {
-        showText("Cakes: " + cakesEaten, 80, 30);
+        showText("Collected: " + collected, 100, 30);
         showText("Level: " + level, 80, 60);
     }
 

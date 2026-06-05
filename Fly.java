@@ -53,7 +53,7 @@ public class Fly extends Actor
             return;
         }
 
-        collectCake();
+        collectItems();
 
         if (getWorld() == null)
         {
@@ -90,6 +90,16 @@ public class Fly extends Actor
         }
     }
 
+    public void heal(int amount)
+    {
+        health = health + amount;
+
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
+    }
+
     private void drawHealthBar()
     {
         GreenfootImage img = new GreenfootImage(currentFrame);
@@ -100,10 +110,20 @@ public class Fly extends Actor
         int healthWidth = (health * barWidth) / maxHealth;
 
         img.setColor(Color.RED);
-        img.fillRect((img.getWidth() - barWidth) / 2, 0, barWidth, barHeight);
+        img.fillRect(
+            (img.getWidth() - barWidth) / 2,
+            0,
+            barWidth,
+            barHeight
+        );
 
         img.setColor(Color.GREEN);
-        img.fillRect((img.getWidth() - barWidth) / 2, 0, healthWidth, barHeight);
+        img.fillRect(
+            (img.getWidth() - barWidth) / 2,
+            0,
+            healthWidth,
+            barHeight
+        );
 
         setImage(img);
     }
@@ -116,17 +136,17 @@ public class Fly extends Actor
         }
     }
 
-    private void collectCake()
+    private void collectItems()
     {
+        World world = getWorld();
+
+        if (world == null)
+        {
+            return;
+        }
+
         if (isTouching(Cake.class))
         {
-            World world = getWorld();
-
-            if (world == null)
-            {
-                return;
-            }
-
             Actor cake = getOneIntersectingObject(Cake.class);
 
             if (cake != null)
@@ -134,7 +154,22 @@ public class Fly extends Actor
                 world.removeObject(cake);
 
                 MyWorld myWorld = (MyWorld) world;
-                myWorld.cakeCollected();
+                myWorld.itemCollected();
+            }
+        }
+
+        if (isTouching(Heart.class))
+        {
+            Actor heart = getOneIntersectingObject(Heart.class);
+
+            if (heart != null)
+            {
+                world.removeObject(heart);
+
+                heal(20);
+
+                MyWorld myWorld = (MyWorld) world;
+                myWorld.itemCollected();
             }
         }
     }
@@ -175,7 +210,10 @@ public class Fly extends Actor
             dx = (dx / len) * speed;
             dy = (dy / len) * speed;
 
-            setLocation((int)(getX() + dx), (int)(getY() + dy));
+            setLocation(
+                (int)(getX() + dx),
+                (int)(getY() + dy)
+            );
 
             if (Math.abs(dx) > Math.abs(dy))
             {
@@ -221,8 +259,15 @@ public class Fly extends Actor
             flyRight[i] = new GreenfootImage("fly_move/fly_horizontal" + (i + 1) + ".png");
             flyVertical[i] = new GreenfootImage("fly_move/fly_vertical" + (i + 1) + ".png");
 
-            flyRight[i].scale(flyRight[i].getWidth() / 5, flyRight[i].getHeight() / 5);
-            flyVertical[i].scale(flyVertical[i].getWidth() / 5, flyVertical[i].getHeight() / 5);
+            flyRight[i].scale(
+                flyRight[i].getWidth() / 5,
+                flyRight[i].getHeight() / 5
+            );
+
+            flyVertical[i].scale(
+                flyVertical[i].getWidth() / 5,
+                flyVertical[i].getHeight() / 5
+            );
         }
     }
 
@@ -234,7 +279,9 @@ public class Fly extends Actor
         {
             imageIndex = (imageIndex + 1) % flyVertical.length;
 
-            GreenfootImage img = new GreenfootImage(flyVertical[imageIndex]);
+            GreenfootImage img = new GreenfootImage(
+                flyVertical[imageIndex]
+            );
 
             if (facingDown)
             {
@@ -253,7 +300,9 @@ public class Fly extends Actor
         {
             imageIndex = (imageIndex + 1) % flyRight.length;
 
-            GreenfootImage img = new GreenfootImage(flyRight[imageIndex]);
+            GreenfootImage img = new GreenfootImage(
+                flyRight[imageIndex]
+            );
 
             if (!facingRight)
             {
