@@ -64,6 +64,14 @@ public class Fly extends Actor
         {
             return;
         }
+        {
+    if (health <= 0)
+        {
+            // Switch the world to the game over screen
+            Greenfoot.setWorld(new DeathScreen());
+        }
+    }
+        
 
         stayInBounds();
 

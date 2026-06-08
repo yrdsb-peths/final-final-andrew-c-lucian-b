@@ -82,7 +82,9 @@ public class MyWorld extends World
         if (getObjects(Fly.class).isEmpty())
         {
             gameOver = true;
-            showText("GAME OVER", getWidth() / 2, getHeight() / 2);
+        
+            // Switch to the custom DeathScreen world
+            Greenfoot.setWorld(new DeathScreen());
         }
     }
 }
