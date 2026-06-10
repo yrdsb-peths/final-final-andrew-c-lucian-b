@@ -22,6 +22,9 @@ public class Grandma extends Actor
 
     private int level = 1;
 
+    private boolean frozen = false;
+    private int freezeTimer = 0;
+
     public Grandma()
     {
         for (int i = 0; i < grandmaRight.length; i++)
@@ -40,6 +43,18 @@ public class Grandma extends Actor
 
     public void act()
     {
+        if (frozen)
+        {
+            freezeTimer--;
+
+            if (freezeTimer <= 0)
+            {
+                frozen = false;
+            }
+
+            return;
+        }
+
         chaseFly();
         throwProjectile();
         animateGrandma();
@@ -49,10 +64,16 @@ public class Grandma extends Actor
     public void setLevel(int level)
     {
         this.level = level;
-    
+
         speed = Math.min(3, 1 + (level - 1) / 3);
-    
+
         throwDelay = Math.max(40, 120 - (level - 1) * 15);
+    }
+
+    public void freeze(int seconds)
+    {
+        frozen = true;
+        freezeTimer = seconds * 60;
     }
 
     private void chaseFly()
@@ -121,36 +142,35 @@ public class Grandma extends Actor
         double dirX = dx / length;
         double dirY = dy / length;
 
+        Projectile proj;
+
         if (level == 1)
         {
-            Projectile proj = new Projectile(dirX, dirY, "shoe", 20, 4);
+            proj = new Projectile(dirX, dirY, "shoe", 20, 4);
             proj.setScale(40);
-            getWorld().addObject(proj, getX(), getY());
         }
         else if (level == 2)
         {
-            Projectile proj = new Projectile(dirX, dirY, "yarn", 35, 4);
+            proj = new Projectile(dirX, dirY, "yarn", 35, 4);
             proj.setScale(55);
-            getWorld().addObject(proj, getX(), getY());
         }
         else if (level == 3)
         {
-            Projectile proj = new Projectile(dirX, dirY, "comb", 50, 5);
+            proj = new Projectile(dirX, dirY, "comb", 50, 5);
             proj.setScale(65);
-            getWorld().addObject(proj, getX(), getY());
         }
         else if (level == 4)
         {
-            Projectile proj = new Projectile(dirX, dirY, "drugs", 65, 5);
+            proj = new Projectile(dirX, dirY, "drugs", 65, 5);
             proj.setScale(80);
-            getWorld().addObject(proj, getX(), getY());
         }
         else
         {
-            Projectile proj = new Projectile(dirX, dirY, "purse", 80, 6);
+            proj = new Projectile(dirX, dirY, "purse", 80, 6);
             proj.setScale(95);
-            getWorld().addObject(proj, getX(), getY());
         }
+
+        getWorld().addObject(proj, getX(), getY());
 
         throwCooldown = throwDelay;
     }

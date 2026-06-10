@@ -34,7 +34,7 @@ public class MyWorld extends World
 
     public void act()
     {
-        if (gameOver == false)
+        if (!gameOver)
         {
             checkGameOver();
         }
@@ -68,13 +68,17 @@ public class MyWorld extends World
 
         int chance = Greenfoot.getRandomNumber(100);
 
-        if (chance < 20)
+        if (chance < 60)
+        {
+            addObject(new Cake(), x, y);
+        }
+        else if (chance < 80)
         {
             addObject(new Heart(), x, y);
         }
         else
         {
-            addObject(new Cake(), x, y);
+            addObject(new Frozen(), x, y);
         }
     }
 
