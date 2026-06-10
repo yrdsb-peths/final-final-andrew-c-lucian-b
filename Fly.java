@@ -25,6 +25,10 @@ public class Fly extends Actor
 
     private GreenfootImage currentFrame;
 
+    private GreenfootSound yumSound = new GreenfootSound("yum.mp3");
+    private GreenfootSound ouchSound = new GreenfootSound("ouch.mp3");
+    private GreenfootSound gameOverSound = new GreenfootSound("gameover.mp3");
+
     public Fly()
     {
         loadAnimations();
@@ -67,6 +71,8 @@ public class Fly extends Actor
 
         if (health <= 0)
         {
+            gameOverSound.stop();
+            gameOverSound.play();
             Greenfoot.setWorld(new DeathScreen());
         }
 
@@ -80,6 +86,9 @@ public class Fly extends Actor
         {
             return;
         }
+
+        ouchSound.stop();
+        ouchSound.play();
 
         health -= damage;
 
@@ -142,6 +151,9 @@ public class Fly extends Actor
 
             if (cake != null)
             {
+                yumSound.stop();
+                yumSound.play();
+
                 world.removeObject(cake);
 
                 GameWorld GameWorld = (GameWorld) world;
