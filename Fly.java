@@ -64,17 +64,13 @@ public class Fly extends Actor
         {
             return;
         }
+
+        if (health <= 0)
         {
-    if (health <= 0)
-        {
-            // Switch the world to the game over screen
             Greenfoot.setWorld(new DeathScreen());
         }
-    }
-        
 
         stayInBounds();
-
         drawHealthBar();
     }
 
@@ -85,7 +81,7 @@ public class Fly extends Actor
             return;
         }
 
-        health = health - damage;
+        health -= damage;
 
         if (health < 0)
         {
@@ -93,19 +89,11 @@ public class Fly extends Actor
         }
 
         invulnerabilityTimer = 120;
-
-        if (health <= 0)
-        {
-            if (getWorld() != null)
-            {
-                getWorld().removeObject(this);
-            }
-        }
     }
 
     public void heal(int amount)
     {
-        health = health + amount;
+        health += amount;
 
         if (health > maxHealth)
         {
@@ -174,6 +162,22 @@ public class Fly extends Actor
                 myWorld.itemCollected();
             }
         }
+
+        if (isTouching(Frozen.class))
+        {
+            Actor frozen = getOneIntersectingObject(Frozen.class);
+
+            if (frozen != null)
+            {
+                world.removeObject(frozen);
+
+                MyWorld myWorld = (MyWorld) world;
+                myWorld.itemCollected();
+
+                Grandma grandma = (Grandma) world.getObjects(Grandma.class).get(0);
+                grandma.freeze(3);
+            }
+        }
     }
 
     private void moveFly()
@@ -183,25 +187,25 @@ public class Fly extends Actor
 
         if (Greenfoot.isKeyDown("w"))
         {
-            dy = dy - 1;
+            dy -= 1;
             facingDown = false;
         }
 
         if (Greenfoot.isKeyDown("s"))
         {
-            dy = dy + 1;
+            dy += 1;
             facingDown = true;
         }
 
         if (Greenfoot.isKeyDown("a"))
         {
-            dx = dx - 1;
+            dx -= 1;
             facingRight = false;
         }
 
         if (Greenfoot.isKeyDown("d"))
         {
-            dx = dx + 1;
+            dx += 1;
             facingRight = true;
         }
 
@@ -212,10 +216,7 @@ public class Fly extends Actor
             dx = (dx / len) * speed;
             dy = (dy / len) * speed;
 
-            setLocation(
-                (int)(getX() + dx),
-                (int)(getY() + dy)
-            );
+            setLocation((int)(getX() + dx), (int)(getY() + dy));
 
             if (Math.abs(dx) > Math.abs(dy))
             {
