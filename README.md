@@ -1,20 +1,5 @@
-# Set up Greenfoot for VSCode
+"Crazy Granny" video game by Lucian Bai and Andrew Chen
 
-[Mac]
-1. Open `Finder` and navigate to the Applications folder.
-2. Right-click on the Greenfoot app and select `Show Package Contents`.
-3. In the opened folder, go to `Contents -> Resources -> Java` and find the `greenfoot.jar` file.
-4. Copy this `greenfoot.jar` to the `/lib` Folder in this project.
+A fast-paced 2D arcade game, built in Java using the Greenfoot framework by Lucian and Andrew. In this game, a cake-hungry fly runs away from an increasingly aggressive Grandma. Player must navigate the screen to consume cakes while dodging Grandma's vector-targeted projectile attacks, which upgrade from throwing shoes to medication, to canes, to purses as more cakes are consumed.
 
-[Windows]
-1. Open `File Explorer` and navigate to `C:\Program Files\Greenfoot` and locate the `greenfoot.jar` file.
-2. Copy this `greenfoot.jar` to the `\lib` Folder in this project.
-
-<br>
-<br>
-
-# project.greenfoot
-Copy the `project.greenfoot.md` file and rename it to `project.greenfoot`
-
-# Learn Markdown Basics
-[Markdown basics](https://www.markdownguide.org/getting-started/)
+To keep the gameplay challenging, the game features a dynamic scaling mechanic where Grandma's chasing speed permanently increases for every 5 cakes eaten. 
